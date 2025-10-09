@@ -1,6 +1,14 @@
 # Todoapp README
 
-- [ ] TODO Replace or update this README with instructions relevant to your application
+Authors:
+
+**Group TP01-6**
+
+- LETI-122639 Joao Matos
+- LETI-122627 Gonçalo Guilherme
+- LETI-122635 Rui Andrez
+- LETI-106804 Carlos Correia
+
 
 ## Project Structure
 
