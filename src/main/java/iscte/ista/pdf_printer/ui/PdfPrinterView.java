@@ -18,8 +18,8 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import static com.vaadin.flow.spring.data.VaadinSpringDataHelpers.toSpringPageRequest;
 
 @Route("pdf-printer")
-@PageTitle("PDF Printers")
-@Menu(order = 1, icon = "vaadin:print", title = "PDF Printers")
+@PageTitle("PDF Prints")
+@Menu(order = 1, icon = "vaadin:print", title = "PDF Prints")
 class PdfPrinterListView extends Main {
 
     private final PdfPrinterService pdfPrinterService;
@@ -32,8 +32,8 @@ class PdfPrinterListView extends Main {
         this.pdfPrinterService = pdfPrinterService;
 
         nameField = new TextField();
-        nameField.setPlaceholder("Printer name");
-        nameField.setAriaLabel("Printer name");
+        nameField.setPlaceholder("PDF name");
+        nameField.setAriaLabel("PDF name");
         nameField.setMaxLength(100);
         nameField.setMinWidth("20em");
 
@@ -50,7 +50,7 @@ class PdfPrinterListView extends Main {
         addClassNames(LumoUtility.BoxSizing.BORDER, LumoUtility.Display.FLEX, LumoUtility.FlexDirection.COLUMN,
                 LumoUtility.Padding.MEDIUM, LumoUtility.Gap.SMALL);
 
-        add(new ViewToolbar("PDF Printers", ViewToolbar.group(nameField, createBtn)));
+        add(new ViewToolbar("PDF Prints", ViewToolbar.group(nameField, createBtn)));
         add(printerGrid);
     }
 
@@ -58,7 +58,7 @@ class PdfPrinterListView extends Main {
         pdfPrinterService.createPdfPrinter(nameField.getValue());
         printerGrid.getDataProvider().refreshAll();
         nameField.clear();
-        Notification.show("Printer added", 3000, Notification.Position.BOTTOM_END)
+        Notification.show("PDF added", 3000, Notification.Position.BOTTOM_END)
                 .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
     }
 }
