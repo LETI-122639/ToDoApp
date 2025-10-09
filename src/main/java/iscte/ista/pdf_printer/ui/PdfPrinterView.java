@@ -17,7 +17,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import static com.vaadin.flow.spring.data.VaadinSpringDataHelpers.toSpringPageRequest;
 
-@Route("pdf-printer")
+@Route("pdf-prints")
 @PageTitle("PDF Prints")
 @Menu(order = 1, icon = "vaadin:print", title = "PDF Prints")
 class PdfPrinterListView extends Main {
