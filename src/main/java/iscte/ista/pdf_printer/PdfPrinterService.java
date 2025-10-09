@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -17,9 +18,10 @@ public class PdfPrinterService {
         this.pdfPrinterRepository = pdfPrinterRepository;
     }
 
+    // Modificado para aceitar a data de vencimento
     @Transactional
-    public void createPdfPrinter(String name) {
-        var printer = new PdfPrinter(name, Instant.now());
+    public void createPdfPrinter(String name, LocalDate dueDate) {
+        var printer = new PdfPrinter(name, Instant.now(), dueDate);  // Passando a dueDate para o construtor
         pdfPrinterRepository.saveAndFlush(printer);
     }
 

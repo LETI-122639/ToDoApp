@@ -3,6 +3,9 @@ package iscte.ista.pdf_printer;
 import jakarta.persistence.*;
 import org.jspecify.annotations.Nullable;
 
+import java.time.LocalDate;
+import java.time.Instant;
+
 @Entity
 @Table(name = "pdf_printer")
 public class PdfPrinter {
@@ -16,14 +19,18 @@ public class PdfPrinter {
     private String name = "";
 
     @Column(name = "created_at", nullable = false)
-    private java.time.Instant createdAt;
+    private Instant createdAt;
+
+    @Column(name = "due_date", nullable = true) // Campo para a data de vencimento
+    private LocalDate dueDate;
 
     protected PdfPrinter() { // Para o Hibernate
     }
 
-    public PdfPrinter(String name, java.time.Instant createdAt) {
+    public PdfPrinter(String name, Instant createdAt, LocalDate dueDate) {
         setName(name);
         this.createdAt = createdAt;
+        this.dueDate = dueDate;
     }
 
     public @Nullable Long getId() {
@@ -41,8 +48,16 @@ public class PdfPrinter {
         this.name = name;
     }
 
-    public java.time.Instant getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
 
     @Override
