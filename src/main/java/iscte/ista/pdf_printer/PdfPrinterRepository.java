@@ -10,12 +10,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * Permite operações CRUD e consultas paginadas/especificadas.
  */
 interface PdfPrinterRepository extends JpaRepository<PdfPrinter, Long>, JpaSpecificationExecutor<PdfPrinter> {
-
-    /**
-     * Retorna uma fatia paginada de impressoras PDF.
-     * @param pageable informações de paginação
-     * @return fatia de {@link PdfPrinter}
-     */
     Slice<PdfPrinter> findAllBy(Pageable pageable);
+    // (novo) — não é necessário. Vamos usar o executor de Specifications diretamente no serviço.
 }
+
 
