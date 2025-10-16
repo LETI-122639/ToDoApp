@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
  * Repositório Spring Data JPA para a entidade {@link PdfPrinter}.
- * Permite operações CRUD e consultas paginadas/especificadas.
+ * Permite operações CRUD, paginação e Specifications.
  */
 interface PdfPrinterRepository extends JpaRepository<PdfPrinter, Long>, JpaSpecificationExecutor<PdfPrinter> {
+
+    /**
+     * Lista "simples" paginada (sem filtros). Mantida por compatibilidade.
+     */
     Slice<PdfPrinter> findAllBy(Pageable pageable);
-    // (novo) — não é necessário. Vamos usar o executor de Specifications diretamente no serviço.
 }
-
-

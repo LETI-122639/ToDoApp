@@ -1,8 +1,7 @@
 package iscte.ista.pdf_printer;
 
-import org.jspecify.annotations.Nullable;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,7 @@ public class PdfPrinterService {
     public enum DueFilter {
         ALL,           // todos
         NO_DUE_DATE,   // sem due date
-        OVERDUE,       // vencidos (due < hoje)
+        OVERDUE,       // due < hoje
         DUE_TODAY,     // due == hoje
         UPCOMING       // due > hoje
     }
@@ -30,20 +29,42 @@ public class PdfPrinterService {
         this.pdfPrinterRepository = pdfPrinterRepository;
     }
 
+    /** Cria um novo registo com due date e status por defeito (PENDING). */
     @Transactional
     public void createPdfPrinter(String name, LocalDate dueDate) {
+        createPdfPrinter(name, dueDate, PdfPrinter.Status.PENDING);
+    }
+
+    /** Cria um novo registo com due date e status fornecido. */
+    @Transactional
+    public void createPdfPrinter(String name, LocalDate dueDate, PdfPrinter.Status status) {
         var printer = new PdfPrinter(name, Instant.now(), dueDate);
+        printer.setStatus(status == null ? PdfPrinter.Status.PENDING : status);
         pdfPrinterRepository.saveAndFlush(printer);
     }
 
-    // ===== NOVO: Specifications =====
-    private Specification<PdfPrinter> buildSpec(@Nullable String nameQuery, DueFilter filter) {
+    /** Atualiza o status de um registo. */
+    @Transactional
+    public PdfPrinter updateStatus(Long id, PdfPrinter.Status status) {
+        var printer = pdfPrinterRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("PdfPrinter not found: " + id));
+        printer.setStatus(status == null ? PdfPrinter.Status.PENDING : status);
+        return pdfPrinterRepository.save(printer);
+    }
+
+    // ===== Specifications para pesquisa e filtros =====
+    private Specification<PdfPrinter> buildSpec(String nameQuery, DueFilter filter, PdfPrinter.Status statusFilter) {
         return (root, cq, cb) -> {
             List<Predicate> preds = new ArrayList<>();
 
             if (nameQuery != null && !nameQuery.isBlank()) {
                 String like = "%" + nameQuery.trim().toLowerCase() + "%";
                 preds.add(cb.like(cb.lower(root.get("name")), like));
+            }
+
+            // Filtro por Status (se definido)
+            if (statusFilter != null) {
+                preds.add(cb.equal(root.get("status"), statusFilter));
             }
 
             LocalDate today = LocalDate.now();
@@ -60,20 +81,15 @@ public class PdfPrinterService {
         };
     }
 
-    // ===== NOVO: list + count com filtro =====
+    /** Lista paginada e ordenada com pesquisa/filtros. */
     @Transactional(readOnly = true)
-    public Page<PdfPrinter> list(String nameQuery, DueFilter filter, Pageable pageable) {
-        return pdfPrinterRepository.findAll(buildSpec(nameQuery, filter), pageable);
+    public Page<PdfPrinter> list(String nameQuery, DueFilter filter, PdfPrinter.Status statusFilter, Pageable pageable) {
+        return pdfPrinterRepository.findAll(buildSpec(nameQuery, filter, statusFilter), pageable);
     }
 
+    /** Contagem total com pesquisa/filtros. */
     @Transactional(readOnly = true)
-    public long count(String nameQuery, DueFilter filter) {
-        return pdfPrinterRepository.count(buildSpec(nameQuery, filter));
-    }
-
-    // Mantém o método antigo se quiseres compatibilidade:
-    @Transactional(readOnly = true)
-    public List<PdfPrinter> list(Pageable pageable) {
-        return pdfPrinterRepository.findAllBy(pageable).toList();
+    public long count(String nameQuery, DueFilter filter, PdfPrinter.Status statusFilter) {
+        return pdfPrinterRepository.count(buildSpec(nameQuery, filter, statusFilter));
     }
 }
