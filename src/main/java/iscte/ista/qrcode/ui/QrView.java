@@ -6,16 +6,15 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant; // <- igual ao TaskList: usar variant
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Base64;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -25,14 +24,13 @@ import com.google.zxing.common.BitMatrix;
 @Route("qrcode")
 @PageTitle("QR Code")
 @Menu(order = 1, title = "QR Code")
-class QrView extends Main { // <- sem 'public', tal como o TaskListView
+class QrView extends Main {
 
-    // <- campos 'final' sem 'private', tal como no TaskListView
     final TextField content;
     final Button generateBtn;
     final Image qrImage;
 
-    QrView() { // <- construtor sem 'public', igual ao TaskListView
+    QrView() {
         content = new TextField();
         content.setPlaceholder("Texto/URL para o QR");
         content.setAriaLabel("QR content");
@@ -49,7 +47,6 @@ class QrView extends Main { // <- sem 'public', tal como o TaskListView
         qrImage.setVisible(false);
 
         setSizeFull();
-        // <- chamada num único statement, como no TaskListView
         addClassNames(LumoUtility.BoxSizing.BORDER, LumoUtility.Display.FLEX, LumoUtility.FlexDirection.COLUMN,
                 LumoUtility.Padding.MEDIUM, LumoUtility.Gap.SMALL);
 
@@ -72,12 +69,12 @@ class QrView extends Main { // <- sem 'public', tal como o TaskListView
             MatrixToImageWriter.writeToStream(matrix, "PNG", baos);
             byte[] png = baos.toByteArray();
 
-            StreamResource resource = new StreamResource("qrcode.png", () -> new ByteArrayInputStream(png));
+            String base64 = Base64.getEncoder().encodeToString(png);
+            String dataUrl = "data:image/png;base64," + base64;
 
-            qrImage.setSrc(resource);
+            qrImage.setSrc(dataUrl);
             qrImage.setVisible(true);
 
-            // <- tal como no TaskListView: sucesso com variant + limpar campo
             Notification.show("QR Code gerado!", 1500, Notification.Position.BOTTOM_END)
                     .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             content.clear();
