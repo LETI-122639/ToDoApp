@@ -15,7 +15,7 @@ import com.vaadin.flow.server.menu.MenuEntry;
 import static com.vaadin.flow.theme.lumo.LumoUtility.*;
 
 @Layout
-public final class MainLayout extends AppLayout {
+public final class  MainLayout extends AppLayout {
 
     MainLayout() {
         setPrimarySection(Section.DRAWER);
