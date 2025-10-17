@@ -42,6 +42,35 @@ src
         └── examplefeature
            └── TaskServiceTest.java                 
 ```
+### ⚙️ CI/CD Automation — GitHub Actions
+
+This feature introduces an automated **Continuous Integration / Continuous Deployment (CI/CD)** process for the TodoApp project, developed following Scrum best practices.  
+The main goal is to automatically build and publish a runnable `.jar` file whenever new code is pushed to the main branch.
+
+---
+
+### 🧾 Feature Overview
+As part of our continuous improvement process, the team implemented a **GitHub Actions workflow** that automates the build phase of the project.  
+This ensures that the application can be compiled, packaged, and distributed consistently outside the development environment.
+
+---
+
+### ✅ Acceptance Criteria
+
+- The workflow runs automatically on every **push to the `main` branch**.  
+- The pipeline **sets up a Java 21 environment** using the official GitHub Action.  
+- Executes the command **`mvn clean package`** to build the `.jar` file.  
+- The resulting `.jar` file is **published as a downloadable artifact** in the GitHub Actions tab.  
+- (Optional) The JAR is **copied to the root of the repository** for easy access in the web interface.  
+- Build logs and artifacts are available under the **Actions** section in the repository.
+
+---
+
+### 🧩 Implementation Details
+
+The workflow is defined in the file:
+
+📂 `.github/workflows/build.yml`
 
 The main entry point into the application is `Application.java`. This class contains the `main()` method that start up 
 the Spring Boot application.
