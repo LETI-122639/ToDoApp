@@ -3,7 +3,7 @@ package iscte.ista.currency;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
-
+ola 
 @Entity
 @Table(name = "currency")
 public class Currency {
